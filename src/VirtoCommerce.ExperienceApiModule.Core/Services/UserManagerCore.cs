@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using VirtoCommerce.ExperienceApiModule.Core.Infrastructure.Authorization;
@@ -28,6 +29,20 @@ namespace VirtoCommerce.ExperienceApiModule.Core.Services
         public Task CheckUserState(string userId)
         {
             return CheckUserState(userId, allowAnonymous: true);
+        }
+
+        public async Task<bool> IsCallCenter(string userId, bool allowAnonymous)
+        {
+            var userManager = _userManagerFactory();
+            var user = await userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return false;
+            }
+            if (user.Roles.Any(x => x.Name == "OT Agent"))
+                return true;
+
+            return false;
         }
 
         public async Task CheckUserState(string userId, bool allowAnonymous)

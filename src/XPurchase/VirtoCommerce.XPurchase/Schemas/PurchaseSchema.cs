@@ -1487,8 +1487,14 @@ namespace VirtoCommerce.XPurchase.Schemas
         private async Task AuthorizeAsync(IResolveFieldContext context, object resource)
         {
             await _userManagerCore.CheckUserState(context.GetCurrentUserId(), allowAnonymous: true);
+            var result = await _userManagerCore.IsCallCenter(context.GetCurrentUserId(), allowAnonymous: true);
+            if (result)
+                return;
+
             var authorizationResult = await _authorizationService.AuthorizeAsync(context.GetCurrentPrincipal(), resource, new CanAccessCartAuthorizationRequirement());
 
+           
+           
             if (!authorizationResult.Succeeded)
             {
                 throw context.IsAuthenticated()

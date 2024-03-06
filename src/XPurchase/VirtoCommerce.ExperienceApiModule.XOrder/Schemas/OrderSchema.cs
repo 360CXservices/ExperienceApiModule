@@ -310,7 +310,13 @@ namespace VirtoCommerce.ExperienceApiModule.XOrder.Schemas
         private async Task AuthorizeAsync(IResolveFieldContext context, object resource, bool allowAnonymous)
         {
             await _userManagerCore.CheckUserState(context.GetCurrentUserId(), allowAnonymous);
+            var result = await _userManagerCore.IsCallCenter(context.GetCurrentUserId(), allowAnonymous: true);
+            if (result)
+                return;
+
             var authorizationResult = await _authorizationService.AuthorizeAsync(context.GetCurrentPrincipal(), resource, new CanAccessOrderAuthorizationRequirement());
+            
+                
 
             if (!authorizationResult.Succeeded)
             {

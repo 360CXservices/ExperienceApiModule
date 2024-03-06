@@ -12,5 +12,6 @@ namespace VirtoCommerce.ExperienceApiModule.Core.Services
         Task CheckUserState(string userId);
 
         Task CheckUserState(string userId, bool allowAnonymous);
+        Task<bool> IsCallCenter(string userId, bool allowAnonymous);
     }
 }
